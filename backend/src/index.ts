@@ -27,6 +27,14 @@ const mockProvider = new MockTikTokEventProvider();
 mockProvider.start((event) => applyGiftEvent(event, broadcast));
 
 app.get('/api/state', (_req, res) => res.json(getPublicState()));
+app.get('/', (_req, res) => {
+  res.json({
+    ok: true,
+    service: 'presidential-battle-backend',
+    message: 'Este é o backend (API + WebSocket). O painel visual fica no serviço frontend.',
+    endpoints: ['/api/state', '/api/health', '/ws'],
+  });
+});
 app.use('/api/candidates', candidatesRouter);
 app.use('/api/gifts', giftsRouter);
 app.use('/api/settings', settingsRouter);
