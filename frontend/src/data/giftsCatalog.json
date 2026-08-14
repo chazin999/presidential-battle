@@ -1,0 +1,17 @@
+{
+  "_readme": "Catálogo de PLACEHOLDER para uso em modo DEMO. Não representa a lista oficial de presentes do TikTok (o TikTok não publica essa lista via API pública para desenvolvedores terceiros). Substitua este arquivo, ou aponte GiftCatalogService para uma fonte oficial autorizada, quando ela existir. Os valores em 'coins' estão como null pois não foram confirmados oficialmente.",
+  "gifts": [
+    { "id": "rose", "name": "Rosa", "image": "🌹", "coins": null },
+    { "id": "heart", "name": "Coração", "image": "❤️", "coins": null },
+    { "id": "thumbsup", "name": "Joinha", "image": "👍", "coins": null },
+    { "id": "star", "name": "Estrela", "image": "⭐", "coins": null },
+    { "id": "fire", "name": "Fogo", "image": "🔥", "coins": null },
+    { "id": "crown", "name": "Coroa", "image": "👑", "coins": null },
+    { "id": "diamond", "name": "Diamante", "image": "💎", "coins": null },
+    { "id": "rocket", "name": "Foguete", "image": "🚀", "coins": null },
+    { "id": "trophy", "name": "Troféu", "image": "🏆", "coins": null },
+    { "id": "lion", "name": "Leão", "image": "🦁", "coins": null },
+    { "id": "castle", "name": "Castelo", "image": "🏰", "coins": null },
+    { "id": "universe", "name": "Universo", "image": "🌌", "coins": null }
+  ]
+}
