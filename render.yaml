@@ -1,0 +1,47 @@
+services:
+  # Backend: API + WebSocket (Node/Express/ws)
+  - type: web
+    name: presidential-battle-backend
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: FRONTEND_ORIGIN
+        value: https://presidential-battle-frontend.onrender.com
+      - key: GIFT_EVENT_SOURCE
+        value: mock
+      - key: DATABASE_PATH
+        value: ./data/battle.db
+      - key: TIKTOK_CLIENT_KEY
+        sync: false
+      - key: TIKTOK_CLIENT_SECRET
+        sync: false
+      - key: TIKTOK_REDIRECT_URI
+        sync: false
+    # NOTA: o plano free do Render não inclui disco persistente.
+    # O SQLite acima funciona, mas reseta a cada novo deploy/restart
+    # do serviço (o app não depende disso: fotos, nomes e pontos do
+    # painel já ficam salvos no localStorage do navegador). Se quiser
+    # que o backend também persista entre deploys, faça upgrade do
+    # serviço e descomente o bloco abaixo:
+    # disk:
+    #   name: battle-data
+    #   mountPath: /var/data
+    #   sizeGB: 1
+    # (nesse caso troque DATABASE_PATH para /var/data/battle.db)
+
+  # Frontend: painel estático (Vite build)
+  - type: static
+    name: presidential-battle-frontend
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_WS_URL
+        value: wss://presidential-battle-backend.onrender.com/ws
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

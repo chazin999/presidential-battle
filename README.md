@@ -198,7 +198,64 @@ inferior direito permite sair do modo.
 - Use sempre HTTPS em produção e mantenha o `backend/.env` fora do
   controle de versão (já incluído em `.gitignore`).
 
-## 14. Stack técnica
+## 14. Deploy no GitHub + Render
+
+### 14.1 Subir para o GitHub
+
+```bash
+cd presidential-battle
+git init
+git add .
+git commit -m "Presidential Battle - painel de live"
+git branch -M main
+git remote add origin https://github.com/SEU_USUARIO/presidential-battle.git
+git push -u origin main
+```
+
+(Crie o repositório vazio antes em github.com/new — sem README, sem
+.gitignore, para não gerar conflito com o push acima.)
+
+### 14.2 Hospedar no Render
+
+Este projeto já inclui um `render.yaml` na raiz (formato "Blueprint").
+No painel do Render:
+
+1. **New +** → **Blueprint**
+2. Conecte o repositório `presidential-battle` que você acabou de subir
+3. O Render vai ler o `render.yaml` e propor **dois serviços**:
+   - `presidential-battle-backend` (Web Service, Node)
+   - `presidential-battle-frontend` (Static Site)
+4. Clique em **Apply** — o build/deploy dos dois começa automaticamente
+
+Depois do primeiro deploy, ajuste 2 coisas manualmente no painel (o
+Render gera URLs com um sufixo aleatório às vezes, então confirme as
+URLs reais):
+
+- No serviço **backend** → Environment → `FRONTEND_ORIGIN` deve ser a
+  URL pública do frontend (ex: `https://presidential-battle-frontend.onrender.com`)
+- No serviço **frontend** → Environment → `VITE_WS_URL` deve ser
+  `wss://` + a URL pública do backend + `/ws`
+  (ex: `wss://presidential-battle-backend.onrender.com/ws`) — depois
+  de mudar, clique em **Manual Deploy → Clear build cache & deploy**
+  no frontend, pois `VITE_WS_URL` é usada em tempo de build
+
+Se quiser conectar o TikTok de verdade (seção 10), preencha também
+`TIKTOK_CLIENT_KEY`, `TIKTOK_CLIENT_SECRET` e `TIKTOK_REDIRECT_URI`
+(este último apontando para
+`https://SEU-BACKEND.onrender.com/api/auth/tiktok/callback`) nas
+variáveis de ambiente do serviço backend no Render.
+
+**Sobre persistência no plano gratuito:** o Render free não inclui
+disco persistente, então o SQLite do backend reseta a cada novo
+deploy/reinício do serviço (o serviço também "dorme" após 15 min sem
+uso e demora alguns segundos para acordar na próxima requisição — normal
+do free tier). Isso não afeta o uso do painel no dia a dia, pois fotos,
+nomes, presentes e pontuação já ficam salvos no `localStorage` do
+navegador pelo frontend. Se quiser que o backend também persista entre
+deploys, faça upgrade do serviço backend e descomente o bloco `disk:`
+no `render.yaml`.
+
+## 15. Stack técnica
 
 - **Frontend:** React 18 + TypeScript + Vite + Tailwind CSS +
   Framer Motion (animações) + canvas-confetti (celebração de vitória) +
